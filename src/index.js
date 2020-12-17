@@ -36,29 +36,42 @@ table.classList.add("table-bordered");
 table.classList.add("table-striped");
 
 const date = new Date();
-const fullYear = new Date().getFullYear();
+const currentDay = date.getDate();
+const currentMonth = date.getMonth();
+const currentYear = date.getFullYear();
 const weekDays = Array.from({ length: 7 }, (_, i) => i);
 const fullWeekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const getDaysInMonth = (month, year = fullYear) => {
+const getDaysInMonth = (month, year = currentYear) => {
   // month is zero based
   return new Date(year, month, 0).getDate(); // 0 is the last day of prev month
 };
 
-const getFirstDayWeekDay = (month, year = fullYear) => {
+const getFirstDayWeekDay = (month, year = currentYear) => {
   const jsMonth = month > 11 ? month - (month - 11) : month;
   // console.log("jsMonth", jsMonth, "month", month - (month % 11));
 
   return new Date(year, month, 1).getDay();
 };
 
-const getLastDayWeekDay = (month, year = fullYear) => {
+const getLastDayWeekDay = (month, year = currentYear) => {
   return new Date(year, month + 1, 0).getDay();
 };
 
 const generateMonthHeader = () => {
   const tr = document.createElement("tr");
   const thead = document.createElement("thead");
+  thead.innerHTML = `
+    <tr>
+      <th colspan="7">
+        <a class="btn"><i class="icon-chevron-left"></i></a>
+        <a class="btn">December</a>
+        <a class="btn">2020</a>
+        <a class="btn"><i class="icon-chevron-right"></i></a>
+      </th>
+    </tr>
+  `;
+
   fullWeekDays.forEach((day) => {
     const th = document.createElement("th");
     th.textContent = day;
@@ -69,25 +82,27 @@ const generateMonthHeader = () => {
   table.appendChild(thead);
 };
 
-const generateDaysBody = () => {
-  const lastDay = getLastDayWeekDay(0, 2021);
-  const totalDaysInMonth = getDaysInMonth(1);
-  const firstDay = getFirstDayWeekDay(0, 2021);
+const generateMonthBody = (month = currentMonth, year = currentYear) => {
+  const lastDay = getLastDayWeekDay(month, year);
+  const totalDaysInMonth = getDaysInMonth(month + 1);
+  const firstDay = getFirstDayWeekDay(month, year);
   const tbody = document.createElement("tbody");
-  // console.log(firstDay);
-  // console.log(fullWeekDays[firstDay]);
   let tRow = tbody.insertRow();
+  let start = 1 - firstDay;
 
-  for (let index = 1 - firstDay; index <= totalDaysInMonth; index++) {
+  for (start; start <= totalDaysInMonth; start++) {
     const td = document.createElement("td");
-    const isClickable = index > 0;
-    const count = index + firstDay;
-    td.textContent = isClickable ? index : "";
+    const isClickable = start > 0;
+    const count = start + firstDay;
+    td.classList.add("text-center");
+    td.textContent = isClickable ? start : "";
     isClickable && td.classList.add("pointer");
+    start === currentDay && td.classList.add("active");
 
-    if (count % 7 == 1) {
+    if (count % 7 === 1) {
       tRow = tbody.insertRow();
     }
+
     tRow.appendChild(td);
   }
 
@@ -97,7 +112,7 @@ const generateDaysBody = () => {
 
 const createTable = () => {
   generateMonthHeader();
-  generateDaysBody();
+  generateMonthBody();
 
   const container = document.createElement("div");
   const row = document.createElement("div");
@@ -108,13 +123,4 @@ const createTable = () => {
   document.getElementById("app").append(container);
 };
 
-// console.log("getDaysInMonth", getDaysInMonth(2));
-// console.log("firstDay", firstDay);
-// console.log("lastDay", lastDay);
-// console.log("weekDays", weekDays);
-// console.log("getFirstDayWeekDay", getFirstDayWeekDay(2020, 11));
-// console.log("getLastDayWeekDay", getLastDayWeekDay(2020, 11));
-// console.log("firstFullWeekDay", fullWeekDays[getFirstDayWeekDay(11)]);
-// console.log("lastFullWeekDay", fullWeekDays[getLastDayWeekDay(11)]);
-getFirstDayWeekDay(14);
 createTable();

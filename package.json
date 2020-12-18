@@ -1,7 +1,7 @@
 {
-  "name": "calendar",
+  "name": "calendarjs",
   "version": "1.0.0",
-  "description": "",
+  "description": "A date picker in JavaScript",
   "main": "index.html",
   "scripts": {
     "start": "parcel index.html --open",

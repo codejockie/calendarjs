@@ -1,3 +1,18 @@
 body {
   font-family: sans-serif;
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+td.active {
+  background-color: red !important;
+  color: white;
+  font-weight: bolder;
+}
+
+.today {
+  color: red;
+  font-weight: bolder;
+}

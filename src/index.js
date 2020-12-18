@@ -1,24 +1,5 @@
 import "./styles.css";
 
-function enableClick() {
-  const tds = document.getElementsByTagName("td");
-  const clickables = Array.from(tds).filter((td) => td.textContent);
-
-  clickables.forEach((td) => {
-    td.addEventListener("click", (event) => {
-      const currentSelection = event.target;
-      const selectedDay = currentSelection.textContent;
-      const activeTd = clickables.find((td) => td.classList.contains("active"));
-      if (activeTd) {
-        activeTd.classList.remove("active");
-      }
-      currentSelection.classList.add("active");
-      const fullDate = `2020/12/${selectedDay}`;
-      console.log("Selected date", fullDate);
-    });
-  });
-}
-
 const table = document.createElement("table");
 table.classList.add("table-condensed");
 // table.classList.add("table-bordered");
@@ -43,6 +24,26 @@ const monthNames = [
   "November",
   "December",
 ];
+
+const pad = (val) => (val > 0 && val < 10 ? `0${val}` : val);
+
+function enableClick(month = currentMonth, year = currentYear) {
+  const tds = document.getElementsByTagName("td");
+  const clickables = Array.from(tds).filter((td) => td.textContent);
+
+  clickables.forEach((td) => {
+    td.addEventListener("click", (event) => {
+      const currentSelection = event.target;
+      const selectedDay = currentSelection.textContent;
+      const activeTd = clickables.find((td) => td.classList.contains("active"));
+      activeTd && activeTd.classList.remove("active");
+      currentSelection.classList.add("active");
+      const humanMonth = month + 1;
+      const fullDate = `${year}/${pad(humanMonth)}/${pad(selectedDay)}`;
+      console.log("Selected date", fullDate);
+    });
+  });
+}
 
 const getDaysInMonth = (month = currentMonth, year = currentYear) => {
   // month is zero index based

@@ -9,30 +9,28 @@ import "./styles.css";
 // </div>
 // `;
 
-// const tds = document.getElementsByTagName("td");
-// const filteredTds = Array.from(tds).filter((td) => {
-//   return !td.classList.contains("muted");
-// });
+function enableClick() {
+  const tds = document.getElementsByTagName("td");
+  const clickables = Array.from(tds).filter((td) => td.textContent);
 
-// filteredTds.forEach((td) => {
-//   td.addEventListener("click", (event) => {
-//     const currentSelection = event.target;
-//     const selectedDay = currentSelection.textContent;
-//     const selectedTd = filteredTds.find((td) =>
-//       td.classList.contains("selected")
-//     );
-//     if (selectedTd) {
-//       selectedTd.classList.remove("selected");
-//     }
-//     currentSelection.classList.add("selected");
-//     const fullDate = `2020/12/${selectedDay}`;
-//     console.log("Selected date", fullDate);
-//   });
-// });
+  clickables.forEach((td) => {
+    td.addEventListener("click", (event) => {
+      const currentSelection = event.target;
+      const selectedDay = currentSelection.textContent;
+      const activeTd = clickables.find((td) => td.classList.contains("active"));
+      if (activeTd) {
+        activeTd.classList.remove("active");
+      }
+      currentSelection.classList.add("active");
+      const fullDate = `2020/12/${selectedDay}`;
+      console.log("Selected date", fullDate);
+    });
+  });
+}
 
 const table = document.createElement("table");
 table.classList.add("table-condensed");
-table.classList.add("table-bordered");
+// table.classList.add("table-bordered");
 table.classList.add("table-striped");
 
 const date = new Date();
@@ -66,7 +64,7 @@ const generateMonthHeader = () => {
       <th colspan="7">
         <a class="btn"><i class="icon-chevron-left"></i></a>
         <a class="btn">December</a>
-        <a class="btn">2020</a>
+        <a class="btn">${currentYear}</a>
         <a class="btn"><i class="icon-chevron-right"></i></a>
       </th>
     </tr>
@@ -83,16 +81,18 @@ const generateMonthHeader = () => {
 };
 
 const generateMonthBody = (month = currentMonth, year = currentYear) => {
+  const totalWeekdays = 6; // 0 based index
   const lastDay = getLastDayWeekDay(month, year);
   const totalDaysInMonth = getDaysInMonth(month + 1);
   const firstDay = getFirstDayWeekDay(month, year);
   const tbody = document.createElement("tbody");
   let tRow = tbody.insertRow();
   let start = 1 - firstDay;
+  const end = totalDaysInMonth + (totalWeekdays - lastDay);
 
-  for (start; start <= totalDaysInMonth; start++) {
+  for (start; start <= end; start++) {
     const td = document.createElement("td");
-    const isClickable = start > 0;
+    const isClickable = start > 0 && start <= totalDaysInMonth;
     const count = start + firstDay;
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
@@ -121,6 +121,9 @@ const createTable = () => {
   row.appendChild(table);
   container.appendChild(row);
   document.getElementById("app").append(container);
+
+  //  Enable click handler
+  enableClick();
 };
 
 createTable();

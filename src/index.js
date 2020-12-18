@@ -1,14 +1,5 @@
 import "./styles.css";
 
-// document.getElementById("app").innerHTML = `
-// <h1>Hello Vanilla!</h1>
-// <div>
-//   We use the same configuration as Parcel to bundle this sandbox, you can find more
-//   info about Parcel
-//   <a href="https://parceljs.org" target="_blank" rel="noopener noreferrer">here</a>.
-// </div>
-// `;
-
 function enableClick() {
   const tds = document.getElementsByTagName("td");
   const clickables = Array.from(tds).filter((td) => td.textContent);
@@ -37,34 +28,45 @@ const date = new Date();
 const currentDay = date.getDate();
 const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();
-const weekDays = Array.from({ length: 7 }, (_, i) => i);
 const fullWeekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-const getDaysInMonth = (month, year = currentYear) => {
-  // month is zero based
-  return new Date(year, month, 0).getDate(); // 0 is the last day of prev month
+const getDaysInMonth = (month = currentMonth, year = currentYear) => {
+  // month is zero index based
+  // 0 is the last day of previous month
+  return new Date(year, month, 0).getDate();
 };
 
-const getFirstDayWeekDay = (month, year = currentYear) => {
-  const jsMonth = month > 11 ? month - (month - 11) : month;
-  // console.log("jsMonth", jsMonth, "month", month - (month % 11));
-
+const getFirstDayWeekDay = (month = currentMonth, year = currentYear) => {
   return new Date(year, month, 1).getDay();
 };
 
-const getLastDayWeekDay = (month, year = currentYear) => {
+const getLastDayWeekDay = (month = currentMonth, year = currentYear) => {
   return new Date(year, month + 1, 0).getDay();
 };
 
-const generateMonthHeader = () => {
+const generateMonthHeader = (month = currentMonth, year = currentYear) => {
   const tr = document.createElement("tr");
   const thead = document.createElement("thead");
   thead.innerHTML = `
     <tr>
       <th colspan="7">
         <a class="btn"><i class="icon-chevron-left"></i></a>
-        <a class="btn">December</a>
-        <a class="btn">${currentYear}</a>
+        <a class="btn">${monthNames[month]}</a>
+        <a class="btn">${year}</a>
         <a class="btn"><i class="icon-chevron-right"></i></a>
       </th>
     </tr>
@@ -81,7 +83,7 @@ const generateMonthHeader = () => {
 };
 
 const generateMonthBody = (month = currentMonth, year = currentYear) => {
-  const totalWeekdays = 6; // 0 based index
+  const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
   const totalDaysInMonth = getDaysInMonth(month + 1);
   const firstDay = getFirstDayWeekDay(month, year);

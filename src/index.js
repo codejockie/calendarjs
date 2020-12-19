@@ -13,11 +13,6 @@ import "./styles.css";
 
 // console.log(getYearRanges());
 
-const table = document.createElement("table");
-table.classList.add("table-condensed");
-// table.classList.add("table-bordered");
-table.classList.add("table-striped");
-
 const pad = (val) => (val > 0 && val < 10 ? `0${val}` : `${val}`);
 
 function enableClick(month = currentMonth, year = currentYear) {
@@ -38,16 +33,16 @@ function enableClick(month = currentMonth, year = currentYear) {
   });
 }
 
-const generateMonthHeader = (month, year) => {
+const generateTableHead = (month, year, table) => {
   const tr = document.createElement("tr");
   const thead = document.createElement("thead");
   thead.innerHTML = `
     <tr>
       <th colspan="7">
-        <a class="btn"><i class="icon-chevron-left"></i></a>
-        <a class="btn">${monthNames[month]}</a>
-        <a class="btn">${year}</a>
-        <a class="btn"><i class="icon-chevron-right"></i></a>
+        <a class="btn" id="prev"><i class="icon-chevron-left"></i></a>
+        <a class="btn" id="month">${monthNames[month]}</a>
+        <a class="btn" id="year">${year}</a>
+        <a class="btn" id="next"><i class="icon-chevron-right"></i></a>
       </th>
     </tr>
   `;
@@ -62,7 +57,7 @@ const generateMonthHeader = (month, year) => {
   table.appendChild(thead);
 };
 
-const generateMonthBody = (month, year) => {
+const generateTableBody = (month, year, table) => {
   const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
   const totalDaysInMonth = getDaysInMonth(month + 1);
@@ -79,7 +74,10 @@ const generateMonthBody = (month, year) => {
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
     isClickable && td.classList.add("pointer");
-    start === currentDay && year === currentYear && td.classList.add("today");
+    start === currentDay &&
+      month === currentMonth &&
+      year === currentYear &&
+      td.classList.add("today");
 
     if (count % 7 === 1) {
       tRow = tbody.insertRow();
@@ -93,8 +91,12 @@ const generateMonthBody = (month, year) => {
 };
 
 const createTable = (month, year) => {
-  generateMonthHeader(month, year);
-  generateMonthBody(month, year);
+  const table = document.createElement("table");
+  table.classList.add("table-condensed");
+  // table.classList.add("table-bordered");
+  table.classList.add("table-striped");
+  generateTableHead(month, year, table);
+  generateTableBody(month, year, table);
 
   const container = document.createElement("div");
   const row = document.createElement("div");
@@ -102,10 +104,52 @@ const createTable = (month, year) => {
   row.classList.add("row");
   row.appendChild(table);
   container.appendChild(row);
-  document.getElementById("app").append(container);
 
-  //  Enable click handler
+  const app = document.getElementById("app");
+  app.innerHTML = container.innerHTML;
+
+  //  Enable click handlers
   enableClick();
+  enableButtonClick();
 };
 
 createTable(currentMonth, currentYear);
+
+let prevIndex;
+let nextIndex;
+const END_INDEX = 11;
+const START_INDEX = 0;
+
+function enableButtonClick() {
+  //  Previous button handler
+  document.getElementById("prev").addEventListener("click", () => {
+    const month = document.getElementById("month");
+    const year = document.getElementById("year");
+    const activeMonth = month.textContent;
+    const activeYear = +year.textContent;
+    const activeMonthIndex = monthNames.findIndex(
+      (month) => month === activeMonth
+    );
+    prevIndex = activeMonthIndex - 1;
+    const monthIndex = prevIndex < START_INDEX ? END_INDEX : prevIndex;
+    const visibleYear = prevIndex < START_INDEX ? activeYear - 1 : activeYear;
+    createTable(monthIndex, visibleYear);
+    prevIndex = prevIndex < START_INDEX ? END_INDEX : prevIndex;
+  });
+
+  //  Next button handler
+  document.getElementById("next").addEventListener("click", () => {
+    const month = document.getElementById("month");
+    const year = document.getElementById("year");
+    const activeMonth = month.textContent;
+    const activeYear = +year.textContent;
+    const activeMonthIndex = monthNames.findIndex(
+      (month) => month === activeMonth
+    );
+    nextIndex = activeMonthIndex + 1;
+    const monthIndex = nextIndex > END_INDEX ? START_INDEX : nextIndex;
+    const visibleYear = nextIndex > END_INDEX ? activeYear + 1 : activeYear;
+    createTable(monthIndex, visibleYear);
+    nextIndex = nextIndex > END_INDEX ? START_INDEX : nextIndex;
+  });
+}

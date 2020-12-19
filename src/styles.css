@@ -2,6 +2,10 @@ body {
   font-family: sans-serif;
 }
 
+.container {
+  margin: 5rem auto;
+}
+
 .pointer {
   cursor: pointer;
 }

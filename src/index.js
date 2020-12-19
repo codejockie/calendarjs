@@ -79,7 +79,7 @@ const generateMonthBody = (month, year) => {
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
     isClickable && td.classList.add("pointer");
-    start === currentDay && td.classList.add("today");
+    start === currentDay && year === currentYear && td.classList.add("today");
 
     if (count % 7 === 1) {
       tRow = tbody.insertRow();

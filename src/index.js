@@ -1,31 +1,24 @@
+import {
+  currentDay,
+  currentMonth,
+  currentYear,
+  fullWeekDays,
+  getDaysInMonth,
+  getFirstDayWeekDay,
+  getLastDayWeekDay,
+  getYearRanges,
+  monthNames,
+} from "./utils/date";
 import "./styles.css";
+
+// console.log(getYearRanges());
 
 const table = document.createElement("table");
 table.classList.add("table-condensed");
 // table.classList.add("table-bordered");
 table.classList.add("table-striped");
 
-const date = new Date();
-const currentDay = date.getDate();
-const currentMonth = date.getMonth();
-const currentYear = date.getFullYear();
-const fullWeekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const pad = (val) => (val > 0 && val < 10 ? `0${val}` : val);
+const pad = (val) => (val > 0 && val < 10 ? `0${val}` : `${val}`);
 
 function enableClick(month = currentMonth, year = currentYear) {
   const tds = document.getElementsByTagName("td");
@@ -45,21 +38,7 @@ function enableClick(month = currentMonth, year = currentYear) {
   });
 }
 
-const getDaysInMonth = (month = currentMonth, year = currentYear) => {
-  // month is zero index based
-  // 0 is the last day of previous month
-  return new Date(year, month, 0).getDate();
-};
-
-const getFirstDayWeekDay = (month = currentMonth, year = currentYear) => {
-  return new Date(year, month, 1).getDay();
-};
-
-const getLastDayWeekDay = (month = currentMonth, year = currentYear) => {
-  return new Date(year, month + 1, 0).getDay();
-};
-
-const generateMonthHeader = (month = currentMonth, year = currentYear) => {
+const generateMonthHeader = (month, year) => {
   const tr = document.createElement("tr");
   const thead = document.createElement("thead");
   thead.innerHTML = `
@@ -83,7 +62,7 @@ const generateMonthHeader = (month = currentMonth, year = currentYear) => {
   table.appendChild(thead);
 };
 
-const generateMonthBody = (month = currentMonth, year = currentYear) => {
+const generateMonthBody = (month, year) => {
   const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
   const totalDaysInMonth = getDaysInMonth(month + 1);
@@ -113,9 +92,9 @@ const generateMonthBody = (month = currentMonth, year = currentYear) => {
   table.appendChild(tbody);
 };
 
-const createTable = () => {
-  generateMonthHeader();
-  generateMonthBody();
+const createTable = (month, year) => {
+  generateMonthHeader(month, year);
+  generateMonthBody(month, year);
 
   const container = document.createElement("div");
   const row = document.createElement("div");
@@ -129,4 +108,4 @@ const createTable = () => {
   enableClick();
 };
 
-createTable();
+createTable(currentMonth, currentYear);

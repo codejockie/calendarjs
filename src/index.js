@@ -104,9 +104,11 @@ const createTable = (month, year) => {
   row.classList.add("row");
   row.appendChild(table);
   container.appendChild(row);
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(container);
 
   const app = document.getElementById("app");
-  app.innerHTML = container.innerHTML;
+  app.innerHTML = wrapper.innerHTML;
 
   //  Enable click handlers
   enableClick();

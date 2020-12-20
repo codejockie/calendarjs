@@ -39,10 +39,12 @@ const generateTableHead = (month, year, table) => {
   thead.innerHTML = `
     <tr>
       <th colspan="7">
-        <a class="btn" id="prev"><i class="icon-chevron-left"></i></a>
-        <a class="btn" id="month">${monthNames[month]}</a>
-        <a class="btn" id="year">${year}</a>
-        <a class="btn" id="next"><i class="icon-chevron-right"></i></a>
+        <div class="d-flex justify-content-between">
+          <a class="btn btn-outline-primary btn-sm" id="prev"><i class="bi bi-chevron-left"></i></a>
+          <a class="btn btn-outline-primary btn-sm" id="month">${monthNames[month]}</a>
+          <a class="btn btn-outline-primary btn-sm" id="year">${year}</a>
+          <a class="btn btn-outline-primary btn-sm" id="next"><i class="bi bi-chevron-right"></i></a>
+        </div>
       </th>
     </tr>
   `;
@@ -92,7 +94,9 @@ const generateTableBody = (month, year, table) => {
 
 const createTable = (month, year) => {
   const table = document.createElement("table");
-  table.classList.add("table-condensed");
+  table.classList.add("table");
+  table.classList.add("table-sm");
+  table.classList.add("table-borderless");
   // table.classList.add("table-bordered");
   table.classList.add("table-striped");
   generateTableHead(month, year, table);

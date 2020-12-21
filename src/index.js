@@ -9,6 +9,7 @@ import {
   getYearRanges,
   monthNames,
 } from "./utils/date";
+import { useActive } from "./utils/hooks";
 import "./styles.css";
 
 // console.log(getYearRanges());
@@ -129,13 +130,7 @@ const START_INDEX = 0;
 function enableButtonClick() {
   //  Previous button handler
   document.getElementById("prev").addEventListener("click", () => {
-    const month = document.getElementById("month");
-    const year = document.getElementById("year");
-    const activeMonth = month.textContent;
-    const activeYear = +year.textContent;
-    const activeMonthIndex = monthNames.findIndex(
-      (month) => month === activeMonth
-    );
+    const { activeMonthIndex, activeYear } = useActive();
     prevIndex = activeMonthIndex - 1;
     const monthIndex = prevIndex < START_INDEX ? END_INDEX : prevIndex;
     const visibleYear = prevIndex < START_INDEX ? activeYear - 1 : activeYear;
@@ -145,13 +140,7 @@ function enableButtonClick() {
 
   //  Next button handler
   document.getElementById("next").addEventListener("click", () => {
-    const month = document.getElementById("month");
-    const year = document.getElementById("year");
-    const activeMonth = month.textContent;
-    const activeYear = +year.textContent;
-    const activeMonthIndex = monthNames.findIndex(
-      (month) => month === activeMonth
-    );
+    const { activeMonthIndex, activeYear } = useActive();
     nextIndex = activeMonthIndex + 1;
     const monthIndex = nextIndex > END_INDEX ? START_INDEX : nextIndex;
     const visibleYear = nextIndex > END_INDEX ? activeYear + 1 : activeYear;

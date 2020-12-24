@@ -16,6 +16,10 @@ body {
   cursor: pointer;
 }
 
+td {
+  min-width: 41px;
+}
+
 td.active {
   background-color: red !important;
   color: white !important;

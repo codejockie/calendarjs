@@ -6,13 +6,10 @@ import {
   getDaysInMonth,
   getFirstDayWeekDay,
   getLastDayWeekDay,
-  getYearRanges,
   monthNames,
 } from "./utils/date";
 import { useActive } from "./utils/hooks";
 import "./styles.css";
-
-// console.log(getYearRanges());
 
 const pad = (val) => (val > 0 && val < 10 ? `0${val}` : `${val}`);
 
@@ -24,8 +21,8 @@ function enableClick(month = currentMonth, year = currentYear) {
     td.addEventListener("click", (event) => {
       const selected = event.target;
       const selectedDay = selected.textContent;
-      const activeTd = clickables.find((td) => td.classList.contains("active"));
-      activeTd && activeTd.classList.remove("active");
+      const active = clickables.find((td) => td.classList.contains("active"));
+      active && active.classList.remove("active");
       selected.classList.add("active");
       const humanMonth = month + 1;
       const fullDate = `${year}/${pad(humanMonth)}/${pad(selectedDay)}`;
@@ -53,9 +50,7 @@ const generateTableHead = (month, year, table) => {
   fullWeekDays.forEach((day, index) => {
     const th = document.createElement("th");
     const isWeekend = index === 0 || index === 6;
-    const requiresPadding = index === 5 || index === 6;
     th.textContent = day;
-    requiresPadding && th.classList.add("px-2");
     isWeekend && th.classList.add("text-secondary");
     tr.appendChild(th);
   });
@@ -78,17 +73,21 @@ const generateTableBody = (month, year, table) => {
     const td = document.createElement("td");
     const count = start + firstDay;
     const isClickable = start > 0 && start <= totalDaysInMonth;
-    const isWeekend = count % 7 === 0 || count % 7 === 1;
+    const isSat = count % 7 === 0;
+    const isSun = count % 7 === 1;
+    const isWeekend = isSat || isSun;
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
     isClickable && td.classList.add("pointer");
+    isClickable && td.classList.add("rounded");
+    isClickable && td.classList.add("shadow-sm");
     isWeekend && td.classList.add("text-secondary");
     start === currentDay &&
       month === currentMonth &&
       year === currentYear &&
       td.classList.add("today");
 
-    if (count % 7 === 1) {
+    if (isSun) {
       tRow = tbody.insertRow();
     }
 
@@ -104,8 +103,6 @@ const createTable = (month, year) => {
   table.classList.add("table");
   table.classList.add("table-sm");
   table.classList.add("table-borderless");
-  // table.classList.add("table-bordered");
-  // table.classList.add("table-striped");
   generateTableHead(month, year, table);
   generateTableBody(month, year, table);
 

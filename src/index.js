@@ -22,11 +22,11 @@ function enableClick(month = currentMonth, year = currentYear) {
 
   clickables.forEach((td) => {
     td.addEventListener("click", (event) => {
-      const currentSelection = event.target;
-      const selectedDay = currentSelection.textContent;
+      const selected = event.target;
+      const selectedDay = selected.textContent;
       const activeTd = clickables.find((td) => td.classList.contains("active"));
       activeTd && activeTd.classList.remove("active");
-      currentSelection.classList.add("active");
+      selected.classList.add("active");
       const humanMonth = month + 1;
       const fullDate = `${year}/${pad(humanMonth)}/${pad(selectedDay)}`;
       console.log("Selected date", fullDate);
@@ -50,9 +50,13 @@ const generateTableHead = (month, year, table) => {
     </tr>
   `;
 
-  fullWeekDays.forEach((day) => {
+  fullWeekDays.forEach((day, index) => {
     const th = document.createElement("th");
+    const isWeekend = index === 0 || index === 6;
+    const requiresPadding = index === 5 || index === 6;
     th.textContent = day;
+    requiresPadding && th.classList.add("px-2");
+    isWeekend && th.classList.add("text-secondary");
     tr.appendChild(th);
   });
 
@@ -72,11 +76,13 @@ const generateTableBody = (month, year, table) => {
 
   for (start; start <= end; start++) {
     const td = document.createElement("td");
-    const isClickable = start > 0 && start <= totalDaysInMonth;
     const count = start + firstDay;
+    const isClickable = start > 0 && start <= totalDaysInMonth;
+    const isWeekend = count % 7 === 0 || count % 7 === 1;
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
     isClickable && td.classList.add("pointer");
+    isWeekend && td.classList.add("text-secondary");
     start === currentDay &&
       month === currentMonth &&
       year === currentYear &&
@@ -99,7 +105,7 @@ const createTable = (month, year) => {
   table.classList.add("table-sm");
   table.classList.add("table-borderless");
   // table.classList.add("table-bordered");
-  table.classList.add("table-striped");
+  // table.classList.add("table-striped");
   generateTableHead(month, year, table);
   generateTableBody(month, year, table);
 

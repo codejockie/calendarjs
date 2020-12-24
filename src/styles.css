@@ -18,7 +18,7 @@ body {
 
 td.active {
   background-color: red !important;
-  color: white;
+  color: white !important;
   font-weight: bolder;
 }
 

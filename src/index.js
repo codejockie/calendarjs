@@ -51,6 +51,7 @@ const generateTableHead = (month, year, table) => {
     const th = document.createElement("th");
     const isWeekend = index === 0 || index === 6;
     th.textContent = day;
+    th.classList.add("text-center");
     isWeekend && th.classList.add("text-secondary");
     tr.appendChild(th);
   });

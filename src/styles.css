@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nova+Mono&family=Share+Tech+Mono&display=swap");
+
 body {
   font-family: sans-serif;
 }
@@ -16,14 +18,18 @@ body {
   cursor: pointer;
 }
 
+thead th.weekdays {
+  font-family: "Nova Mono", monospace;
+  font-family: "Share Tech Mono", monospace;
+}
+
 td {
   min-width: 41px;
 }
 
 td.active {
-  background-color: red !important;
+  background-color: #0d6efd !important;
   color: white !important;
-  font-weight: bolder;
 }
 
 .today {

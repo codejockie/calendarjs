@@ -18,6 +18,10 @@ body {
   cursor: pointer;
 }
 
+table {
+  user-select: none;
+}
+
 thead th.weekdays {
   font-family: "Nova Mono", monospace;
   font-family: "Share Tech Mono", monospace;
@@ -33,6 +37,6 @@ td.active {
 }
 
 .today {
-  color: red;
+  color: red !important;
   font-weight: bolder;
 }

@@ -64,7 +64,7 @@ const generateTableHead = (month, year, table) => {
 const generateTableBody = (month, year, table) => {
   const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
-  const totalDaysInMonth = getDaysInMonth(month + 1);
+  const totalDaysInMonth = getDaysInMonth(month + 1, year);
   const firstDay = getFirstDayWeekDay(month, year);
   const tbody = document.createElement("tbody");
   let tRow = tbody.insertRow();

@@ -13,7 +13,7 @@ import "./styles.css";
 
 const pad = (val) => (val > 0 && val < 10 ? `0${val}` : `${val}`);
 
-function enableClick(month = currentMonth, year = currentYear) {
+function enableClick(month, year) {
   const tds = document.getElementsByTagName("td");
   const clickables = Array.from(tds).filter((td) => td.textContent);
 
@@ -25,7 +25,9 @@ function enableClick(month = currentMonth, year = currentYear) {
       active && active.classList.remove("active");
       selected.classList.add("active");
       const humanMonth = month + 1;
-      const fullDate = `${year}/${pad(humanMonth)}/${pad(selectedDay)}`;
+      const fullDate = new Date(
+        `${year}/${pad(humanMonth)}/${pad(selectedDay)}`
+      );
       console.log("Selected date", fullDate);
     });
   });
@@ -121,7 +123,7 @@ const createTable = (month, year) => {
   app.innerHTML = wrapper.innerHTML;
 
   //  Enable click handlers
-  enableClick();
+  enableClick(month, year);
   enableButtonClick();
 };
 

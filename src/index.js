@@ -33,7 +33,7 @@ function enableClick(month, year) {
   });
 }
 
-const generateTableHead = (month, year, table) => {
+const generateWeekdays = (month, year, table) => {
   const tr = document.createElement("tr");
   const thead = document.createElement("thead");
   thead.innerHTML = `
@@ -63,7 +63,7 @@ const generateTableHead = (month, year, table) => {
   table.appendChild(thead);
 };
 
-const generateTableBody = (month, year, table) => {
+const generateDates = (month, year, table) => {
   const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
   const totalDaysInMonth = getDaysInMonth(month + 1, year);
@@ -102,13 +102,18 @@ const generateTableBody = (month, year, table) => {
   table.appendChild(tbody);
 };
 
-const createTable = (month, year) => {
+/**
+ * Creates a date picker
+ * @param {number} month Zero based month e.g. 0 - 11
+ * @param {number} year Full year e.g. 2020
+ */
+const createDatePicker = (month, year) => {
   const table = document.createElement("table");
   table.classList.add("table");
   table.classList.add("table-sm");
   table.classList.add("table-borderless");
-  generateTableHead(month, year, table);
-  generateTableBody(month, year, table);
+  generateWeekdays(month, year, table);
+  generateDates(month, year, table);
 
   const container = document.createElement("div");
   const row = document.createElement("div");
@@ -127,7 +132,7 @@ const createTable = (month, year) => {
   enableButtonClick();
 };
 
-createTable(currentMonth, currentYear);
+createDatePicker(currentMonth, currentYear);
 
 let prevIndex;
 let nextIndex;
@@ -141,7 +146,7 @@ function enableButtonClick() {
     prevIndex = activeMonthIndex - 1;
     const monthIndex = prevIndex < START_INDEX ? END_INDEX : prevIndex;
     const visibleYear = prevIndex < START_INDEX ? activeYear - 1 : activeYear;
-    createTable(monthIndex, visibleYear);
+    createDatePicker(monthIndex, visibleYear);
     prevIndex = prevIndex < START_INDEX ? END_INDEX : prevIndex;
   });
 
@@ -151,7 +156,7 @@ function enableButtonClick() {
     nextIndex = activeMonthIndex + 1;
     const monthIndex = nextIndex > END_INDEX ? START_INDEX : nextIndex;
     const visibleYear = nextIndex > END_INDEX ? activeYear + 1 : activeYear;
-    createTable(monthIndex, visibleYear);
+    createDatePicker(monthIndex, visibleYear);
     nextIndex = nextIndex > END_INDEX ? START_INDEX : nextIndex;
   });
 }

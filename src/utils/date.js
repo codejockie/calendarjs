@@ -1,4 +1,4 @@
-const TOTAL_WEEK_DAYS = 6;
+export const TOTAL_WEEK_DAYS = 6; // zero based index
 const date = new Date();
 export const currentDay = date.getDate();
 //  Zero index based
@@ -47,17 +47,19 @@ export const getPreviousMonthDays = (
   month = currentMonth,
   year = currentYear
 ) => {
-  const firstWeekday = getFirstDayWeekDay();
+  const firstWeekday = getFirstDayWeekDay(month, year);
   const daysInPrevMonth = getDaysInMonth(month + 1, year);
   //  Subtract TOTAL_WEEK_DAYS from firstWeekDay
   const start = firstWeekday - TOTAL_WEEK_DAYS;
-  return Array.from({ length: daysInPrevMonth }, (_, i) => ++i).slice(start);
+  return Array.from({ length: daysInPrevMonth }, (_, i) => ++i).slice(
+    start - TOTAL_WEEK_DAYS
+  );
 };
 
 export const getNextMonthDays = (month = currentMonth, year = currentYear) => {
   //  Add 2 to month since month in JS is 0 based i.e. Jan = 0, Feb = 1
   const nextMonth = month + 2;
-  const lastWeekday = getLastDayWeekDay();
+  const lastWeekday = getLastDayWeekDay(month, year);
   const daysInNextMonth = getDaysInMonth(nextMonth, year);
   //  Subtract lastWeekDay from TOTAL_WEEK_DAYS
   let end = TOTAL_WEEK_DAYS - lastWeekday;

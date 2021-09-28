@@ -7,6 +7,7 @@ import {
   getFirstDayWeekDay,
   getLastDayWeekDay,
   monthNames,
+  TOTAL_WEEK_DAYS,
 } from "./utils/date";
 import { useActive } from "./utils/hooks";
 import "./styles.css";
@@ -66,26 +67,35 @@ const generateWeekdays = (month, year, table) => {
 };
 
 const generateDates = (month, year, table) => {
-  const totalWeekdays = 6; // zero based index
   const lastDay = getLastDayWeekDay(month, year);
-  const totalDaysInMonth = getDaysInMonth(month + 1, year);
   const firstDay = getFirstDayWeekDay(month, year);
+  const totalDaysInMonth = getDaysInMonth(month + 1, year);
   const tbody = document.createElement("tbody");
   let tRow = tbody.insertRow();
   let start = 1 - firstDay;
-  const end = totalDaysInMonth + (totalWeekdays - lastDay);
+  const end = totalDaysInMonth + (TOTAL_WEEK_DAYS - lastDay);
+
+  //  Fill inactive days
+  const fillInactiveDays = (day) => {
+    if (day <= 0) {
+      return day + totalDaysInMonth;
+    }
+    return day - totalDaysInMonth;
+  };
 
   for (start; start <= end; start++) {
     const td = document.createElement("td");
     const count = start + firstDay;
-    const isClickable = start > 0 && start <= totalDaysInMonth;
     const isSat = count % 7 === 0;
     const isSun = count % 7 === 1;
     const isWeekend = isSat || isSun;
+    const isMuted = start <= 0 || start > totalDaysInMonth;
+    const isClickable = start > 0 && start <= totalDaysInMonth;
     td.classList.add("text-center");
-    td.textContent = isClickable ? start : "";
+    td.textContent = isClickable ? start : fillInactiveDays(start);
     isClickable &&
       td.classList.add("current", "pointer", "rounded", "shadow-sm");
+    isMuted && td.classList.add("text-muted");
     isWeekend && td.classList.add("text-secondary");
     start === currentDay &&
       month === currentMonth &&
@@ -110,9 +120,7 @@ const generateDates = (month, year, table) => {
  */
 const createDatePicker = (month, year) => {
   const table = document.createElement("table");
-  table.classList.add("table");
-  table.classList.add("table-sm");
-  table.classList.add("table-borderless");
+  table.classList.add("table", "table-sm", "table-borderless");
   generateWeekdays(month, year, table);
   generateDates(month, year, table);
 

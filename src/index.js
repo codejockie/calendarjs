@@ -15,7 +15,9 @@ const pad = (val) => (val > 0 && val < 10 ? `0${val}` : `${val}`);
 
 function enableClick(month, year) {
   const tds = document.getElementsByTagName("td");
-  const clickables = Array.from(tds).filter((td) => td.textContent);
+  const clickables = Array.from(tds).filter((td) =>
+    td.classList.contains("current")
+  );
 
   clickables.forEach((td) => {
     td.addEventListener("click", (event) => {
@@ -82,9 +84,8 @@ const generateDates = (month, year, table) => {
     const isWeekend = isSat || isSun;
     td.classList.add("text-center");
     td.textContent = isClickable ? start : "";
-    isClickable && td.classList.add("pointer");
-    isClickable && td.classList.add("rounded");
-    isClickable && td.classList.add("shadow-sm");
+    isClickable &&
+      td.classList.add("current", "pointer", "rounded", "shadow-sm");
     isWeekend && td.classList.add("text-secondary");
     start === currentDay &&
       month === currentMonth &&
